@@ -1,0 +1,69 @@
+version: "3.8"
+
+services:
+  
+
+####################
+# Back End Services
+####################
+
+  duckdns:
+    container_name: duckdns
+    image: ghcr.io/linuxserver/duckdns
+
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      SUBDOMAINS: ${DUCKDNS_SUBDOMAINLIST}
+      TOKEN: ${DUCKDNS_TOKEN}
+      LOG_FILE: ${LOGDIR}/duckdns.log #optional
+
+    volumes:
+      - ${CONFIGDIR}/duckdns:/config #optional
+
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 32M  
+    restart: unless-stopped
+
+  socky_proxy:
+    container_name: socky_proxy
+    image: ghcr.io/tecnativa/docker-socket-proxy:0.1 # A security-enhanced proxy for the Docker Socket.
+
+    privileged: true
+  
+    networks:
+      - socky_proxy-net
+
+    ports:
+      - ${PORT_SOCKY_PROXY}:2375
+
+    environment:
+      # Variables match the URL prefix (i.e. AUTH blocks access to /auth/* parts of the API, etc).
+      #   0 - revoke access
+      #   1 - grant access
+      CONTAINERS: 1
+      INFO: 1
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 32M
+
+    restart: always
+
+####################
+# Docker Environment
+####################
+
+networks:
+
+  socky_proxy-net:
+    name: socky_proxy-net
