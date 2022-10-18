@@ -1,36 +1,58 @@
 version: "3.9"
 
 services:
-  
-  
   pihole:
   # More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
     container_name: pihole
-    image: pihole/pihole:2022.05
+    hostname: pihole
+    image: pihole/pihole:latest
+    
+    networks:
+      dns_net:
+        ipv4_address: 172.20.0.2
+
     # For DHCP it is recommended to remove these ports and instead add: network_mode: "host"
     ports:
-      - ${PORT_PIHOLE_WEB}:80
-      - ${PORT_PIHOLE_TCP}:53/tcp
-      - ${PORT_PIHOLE_UDP}:53/udp
-    #  - ${PORT_PIHOLE_DHCP}:67/udp # Only required if you are using Pi-hole as your DHCP server
+      - ${PORT_PIHOLE_WEB:-80}:80
+      - ${PORT_PIHOLE_WEBSSL:-443}:443
+      - ${PORT_PIHOLE_TCP:-53}:53/tcp
+      - ${PORT_PIHOLE_UDP:-53}:53/udp
+    #  - ${PORT_PIHOLE_DHCP:-67}:67/udp # Only required if you are using Pi-hole as your DHCP server
 
     environment:
       TZ: ${TZ}
       WEBPASSWORD: ${PIHOLE_PASSWORD}
       FTLCONF_REPLY_ADDR4: ${PIHOLE_FTLCONF_REPLY_ADDR4}
-      PIHOLE_DNS_: ${PIHOLE_DNS}
-      DHCP_ACTIVE: ${PIHOLE_DHCP_ACTIVE}
+      PIHOLE_DNS_: ${PIHOLE_DNS:-8.8.8.8}
+      DHCP_ACTIVE: ${PIHOLE_DHCP_ACTIVE:-false}
 
-      TEMPERATUREUNIT: ${PIHOLE_TEMPUNIT}
-      WEBTHEME: ${PIHOLE_WEBTHEME}
+      TEMPERATUREUNIT: ${PIHOLE_TEMPUNIT:-c}
+      WEBTHEME: ${PIHOLE_WEBTHEME:-default-dark}
 
     volumes:
-      - ${CONFIGDIR}/pihole/pihole:/etc/pihole
-      - ${CONFIGDIR}/pihole/dnsmasq.d:/etc/dnsmasq.d  
+      - ${CONFIGDIR}/pihole/etc-pihole:/etc/pihole
+      - ${CONFIGDIR}/pihole/etc-dnsmasq.d:/etc/dnsmasq.d  
     #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
 
     cap_add:
       - NET_ADMIN # Recommended but not required (DHCP needs NET_ADMIN)      
+    restart: unless-stopped
+
+  unbound:
+    container_name: unbound
+    image: mvance/unbound-rpi:latest
+    networks:
+      dns_net:
+        ipv4_address: 172.20.0.3
+
+    ports:
+      - ${PORT_UNBOUND:-5053}:5053
+
+    volumes:
+      - ${CONFIGDIR}/unbound:/opt/unbound/etc/unbound
+
+    healthcheck:
+      disable: true
     restart: unless-stopped
 
 
@@ -48,7 +70,6 @@ services:
       TZ: ${TZ}
       SUBDOMAINS: ${DUCKDNS_SUBDOMAINLIST}
       TOKEN: ${DUCKDNS_TOKEN}
-      LOG_FILE: ${LOGDIR}/duckdns.log #optional
 
     volumes:
       - ${CONFIGDIR}/duckdns:/config #optional
@@ -95,6 +116,11 @@ services:
 ####################
 
 networks:
-
   socky_proxy-net:
     name: socky_proxy-net
+  dns-net:
+    name: dns-net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
