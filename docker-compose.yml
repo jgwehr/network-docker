@@ -7,6 +7,9 @@ services:
     hostname: pihole
     image: pihole/pihole:latest
     
+    depends_on:
+      - unbound
+
     networks:
       dns-net:
         ipv4_address: 172.20.0.2
