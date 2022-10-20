@@ -23,7 +23,7 @@ services:
       TZ: ${TZ}
       WEBPASSWORD: ${PIHOLE_PASSWORD}
       FTLCONF_REPLY_ADDR4: ${PIHOLE_FTLCONF_REPLY_ADDR4}
-      PIHOLE_DNS_: ${PIHOLE_DNS:-8.8.8.8}
+      PIHOLE_DNS_: ${PIHOLE_DNS:-unbound#5053}
       DHCP_ACTIVE: ${PIHOLE_DHCP_ACTIVE:-false}
 
       TEMPERATUREUNIT: ${PIHOLE_TEMPUNIT:-c}
@@ -44,9 +44,6 @@ services:
     networks:
       dns_net:
         ipv4_address: 172.20.0.3
-
-    ports:
-      - ${PORT_UNBOUND:-5053}:5053
 
     volumes:
       - ${CONFIGDIR}/unbound:/opt/unbound/etc/unbound
