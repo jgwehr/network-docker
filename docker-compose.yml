@@ -8,7 +8,7 @@ services:
     image: pihole/pihole:latest
     
     networks:
-      dns_net:
+      dns-net:
         ipv4_address: 172.20.0.2
 
     # For DHCP it is recommended to remove these ports and instead add: network_mode: "host"
@@ -25,6 +25,7 @@ services:
       FTLCONF_REPLY_ADDR4: ${PIHOLE_FTLCONF_REPLY_ADDR4}
       PIHOLE_DNS_: ${PIHOLE_DNS:-unbound#5053}
       DHCP_ACTIVE: ${PIHOLE_DHCP_ACTIVE:-false}
+      PIHOLE_DOMAIN: ${PIHOLE_DOMAIN:-lan}
 
       TEMPERATUREUNIT: ${PIHOLE_TEMPUNIT:-c}
       WEBTHEME: ${PIHOLE_WEBTHEME:-default-dark}
@@ -42,7 +43,7 @@ services:
     container_name: unbound
     image: mvance/unbound-rpi:latest
     networks:
-      dns_net:
+      dns-net:
         ipv4_address: 172.20.0.3
 
     volumes:

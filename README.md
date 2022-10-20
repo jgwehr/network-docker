@@ -36,8 +36,11 @@ This project aims to provide a basic set of networking tools. Docker is used as 
 1. `sudo chown -R $USER:$USER /data`
 1. `mkdir -p /srv/config/{unbound,pihole/{dnsmasq.d,pihole}}`
 
+## Starting Services
+### Customize .env
 
-
+### Create the Docker network
+`docker network create -d bridge --subnet 172.20.0.0/16 dns-net`
 
 
 # General
