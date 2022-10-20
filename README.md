@@ -12,6 +12,7 @@ This project aims to provide a basic set of networking tools. Docker is used as 
 1. set up timezone, wifi
 1. Set up the Hostname: `sudo raspi-config` > System Options > Hostname
 1. `sudo apt update && sudo apt upgrade`
+1. Install dig for troubleshooting: `sudo apt-get install dnsutils`
 
 ## Installing Docker
 1. Move to a download folder: `cd ~/Downloads`
@@ -33,8 +34,12 @@ This project aims to provide a basic set of networking tools. Docker is used as 
 1. `git clone https://github.com/jgwehr/network-docker.git Docker` *Stores the local contents in a directory named `Docker`*
 
 ## Build directories
-1. `sudo chown -R $USER:$USER /data`
+
 1. `mkdir -p /srv/config/{unbound,pihole/{dnsmasq.d,pihole}}`
+1. `sudo chown -R $USER:$USER /srv`
+1. Copy Unbound Files: `cp staticconfig/unbound/a-records.conf /srv/config/unbound/`
+1. Copy Unbound Files: `cp staticconfig/unbound/unbound.conf /srv/config/unbound/`
+
 
 ## Starting Services
 ### Customize .env
