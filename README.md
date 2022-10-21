@@ -31,7 +31,7 @@ This project aims to provide a basic set of networking tools. Docker is used as 
 1. `git config --global user.name "your name"`
 1. `git config --global user.email "youremail@domain.com"`
 1. `cd ~`
-1. `git clone https://github.com/jgwehr/network-docker.git Docker` *Stores the local contents in a directory named `Docker`*
+1. `git clone https://github.com/jgwehr/network-docker.git network-docker` *Stores the local contents in a directory named `Docker`*
 
 ## Build directories
 
@@ -66,7 +66,3 @@ Run `sudo apt update`, then `sudo apt full-upgrade -y`, and finally `sudo apt cl
 1. Run `sudoedit /etc/ssh/sshd_config`
 1. Under the line “# Authentication”, add `AllowUsers <account_name1> <account_name2>`
 1. After the change, you will need to restart the sshd service using `sudo systemctl restart ssh` or rebooting.
-## Installing Docker
-1. Move to a download folder: `cd ~/Downloads`
-    1. Copy Docker's installation script to this directory: `curl -fsSL https://get.docker.com -o get-docker.sh`
-    1. Run the installation script: `sudo sh get-docker.sh`
