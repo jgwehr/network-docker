@@ -61,7 +61,7 @@ services:
       PEERS: 1 #optional
 
       SERVERURL: ${WG_SERVERURL:-auto} #optional
-      SERVERPORT: ${WG_SERVERPORT:-51820} #optional
+      SERVERPORT: ${PORT_VPN:-51820} #optional
       PEERDNS: pihole#53
       ALLOWEDIPS: ${WG_ALLOWED_IPS:-0.0.0.0/0} #optional
       LOG_CONFS: true #optional
