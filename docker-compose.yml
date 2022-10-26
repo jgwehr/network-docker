@@ -58,7 +58,7 @@ services:
       PGID: ${PGID}
       TZ: ${TZ}
 
-      PEERS: 1 #optional
+      PEERS: ${WG_PEERS:-1} #optional
 
       SERVERURL: ${WG_SERVERURL:-auto} #optional
       SERVERPORT: ${PORT_VPN:-51820} #optional
