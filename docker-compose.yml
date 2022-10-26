@@ -1,6 +1,10 @@
 version: "3.9"
 
 services:
+  ####################
+  # Network Services
+  ####################
+
   pihole:
   # More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
     container_name: pihole
@@ -39,9 +43,40 @@ services:
     #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
 
     cap_add:
-      - NET_ADMIN # Recommended but not required (DHCP needs NET_ADMIN)      
+      - NET_ADMIN # Recommended but not required (DHCP needs NET_ADMIN)
     restart: unless-stopped
 
+  wireguard-remote:
+    #intended to provide access for maintenance, not "pihole-on-the-go"
+    container_name: wireguard-remote
+    image: lscr.io/linuxserver/wireguard:latest
+
+    ports:
+      - ${PORT_VPN:-51820}:51820/udp
+
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+
+      PEERS: ${WG_PEERS:-1} #optional
+
+      SERVERURL: ${WG_SERVERURL:-auto} #optional
+      SERVERPORT: ${PORT_VPN:-51820} #optional
+      PEERDNS: pihole#53
+      ALLOWEDIPS: ${WG_ALLOWED_IPS:-0.0.0.0/0} #optional
+      LOG_CONFS: true #optional
+
+    volumes:
+      - ${CONFIGDIR}/wireguard:/config
+      - /lib/modules:/lib/modules
+
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    restart: unless-stopped
+  
+  
   unbound:
     container_name: unbound
     image: mvance/unbound-rpi:latest

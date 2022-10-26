@@ -43,10 +43,25 @@ This project aims to provide a basic set of networking tools. Docker is used as 
 
 ## Starting Services
 ### Customize .env
+- You can safely leave all PORT variables as they are. But it's suggested you change `PORT_VPN`
+- Provide `DUCKDNS_SUBDOMAINLIST` and `DUCKDNS_TOKEN` via duckdns.org. This is a free DDNS.
+- While your at it, the subdomain you provided for `DUCKDNS_SUBDOMAINLIST` is also used for `WG_SERVERURL`. If you're SUBDOMAINTLIST is "foo" then `WG_SERVERURL` should be  "foo.duckdns.org"
+- Give a secure password for `PIHOLE_PASSWORD`
+- The rest of the pihole variables are unncessary unless you're using DHCP
+- **Wireguard**: `WG_PEERS` Provision the *number* of clients (eg. `3`) or specific *named* clients (eg. `myPC,myPhone,myTablet`)
+- **Local network accessed via VPN**:  `WG_ALLOWED_IPS` Wireguard allow split tunnelling. Default is to send all traffic through this connection. I recommend changing this to your local network (eg. 192.168.0.0/24) so that only "local" traffic is sent to the vpn.
 
 ### Create the Docker network
 `docker network create -d bridge --subnet 172.20.0.0/16 dns-net`
 
+
+## Getting Remote Management
+*Done through Wireguard*
+
+1. Wireguard will automatically create configurations when the container starts.
+1. You can get the QR codes using `docker logs --follow wireguard`. Alternatively, these files are located at `/srv/config/wireguard/<peer>` when using the default .env
+1. Get the necessary Wireguard client https://www.wireguard.com/install/
+1. Follow Wireguard's instructions. Generally speaking, you'll need a peer/client configuration from this server. Easily done on your phone via QR  code. Or, on a computer, by copying a `*.conf` file from the server to the client.
 
 # General
 _credit to https://github.com/willy-wagtail/raspberrypi_
