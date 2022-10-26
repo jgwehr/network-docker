@@ -46,8 +46,9 @@ services:
       - NET_ADMIN # Recommended but not required (DHCP needs NET_ADMIN)
     restart: unless-stopped
 
-  wireguard:
-    container_name: wireguard
+  wireguard-remote:
+    #intended to provide access for maintenance, not "pihole-on-the-go"
+    container_name: wireguard-remote
     image: lscr.io/linuxserver/wireguard:latest
 
     ports:
