@@ -63,7 +63,7 @@ services:
 
       SERVERURL: ${WG_SERVERURL:-auto} #optional
       SERVERPORT: ${PORT_VPN:-51820} #optional
-      PEERDNS: pihole#53
+      PEERDNS: 172.20.0.2 # passing the pihole container is ideal, but apparently not possible
       ALLOWEDIPS: ${WG_ALLOWED_IPS:-0.0.0.0/0} #optional
       LOG_CONFS: true #optional
 
