@@ -35,10 +35,11 @@ This project aims to provide a basic set of networking tools. Docker is used as 
 
 ## Build directories
 
-1. `mkdir -p /srv/config/{unbound,pihole/{dnsmasq.d,pihole}}`
+1. `mkdir -p /srv/config/{unbound,fail2ban,pihole/{dnsmasq.d,pihole}}`
 1. `sudo chown -R $USER:$USER /srv`
 1. Copy Unbound Files: `cp staticconfig/unbound/a-records.conf /srv/config/unbound/`
 1. Copy Unbound Files: `cp staticconfig/unbound/unbound.conf /srv/config/unbound/`
+1. Copy Fail2Ban Files: `cp staticconfig/fail2ban/jail.local /srv/config/fail2ban/fail2ban/`
 
 
 ## Starting Services
@@ -58,10 +59,27 @@ This project aims to provide a basic set of networking tools. Docker is used as 
 ## Getting Remote Management
 *Done through Wireguard*
 
+### Configure Wireguard
 1. Wireguard will automatically create configurations when the container starts.
 1. You can get the QR codes using `docker logs --follow wireguard`. Alternatively, these files are located at `/srv/config/wireguard/<peer>` when using the default .env
 1. Get the necessary Wireguard client https://www.wireguard.com/install/
 1. Follow Wireguard's instructions. Generally speaking, you'll need a peer/client configuration from this server. Easily done on your phone via QR  code. Or, on a computer, by copying a `*.conf` file from the server to the client.
+
+### Harden SSH
+*via https://linuxhandbook.com/ssh-hardening-tips/*
+
+1.  Create a new SSH Group for approved users: `sudo groupadd -g 1022 ssh_allowed`
+1.  Add your primary SSH User to this group: `sudo usermod -a -G ssh_allowed pi`
+1.  Open SSHD Config: `sudo nano /etc/ssh/sshd_config`
+    1.  Disable empty passwords: `PermitEmptyPasswords no`
+    2.  Change default SSH ports: `Port 2345`
+    5.  Configure idle timeout interval: `ClientAliveInterval 300`
+    5.  Configure idle timeout interval: `ClientAliveCountMax 2`
+    6.  Configure Allowed  Groups: `AllowGroups ssh_allowed`
+1. After the change, you will need to restart the sshd service using `sudo systemctl restart ssh` or rebooting.
+
+
+
 
 # General
 _credit to https://github.com/willy-wagtail/raspberrypi_
@@ -76,8 +94,3 @@ Run the command `/usr/bin/tvservice -o` to disable HDMI. Also run `sudo nano /et
 ## Updating and upgrading rasp pi OS
 
 Run `sudo apt update`, then `sudo apt full-upgrade -y`, and finally `sudo apt clean` to clean up the downloaded package files.
-
-## Restrict ssh accounts
-1. Run `sudoedit /etc/ssh/sshd_config`
-1. Under the line “# Authentication”, add `AllowUsers <account_name1> <account_name2>`
-1. After the change, you will need to restart the sshd service using `sudo systemctl restart ssh` or rebooting.

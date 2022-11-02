@@ -63,7 +63,7 @@ services:
 
       SERVERURL: ${WG_SERVERURL:-auto} #optional
       SERVERPORT: ${PORT_VPN:-51820} #optional
-      PEERDNS: pihole#53
+      PEERDNS: 8.8.8.8
       ALLOWEDIPS: ${WG_ALLOWED_IPS:-0.0.0.0/0} #optional
       LOG_CONFS: true #optional
 
@@ -74,6 +74,11 @@ services:
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 64M  
     restart: unless-stopped
   
   
@@ -115,6 +120,27 @@ services:
         limits:
           cpus: '1'
           memory: 32M  
+    restart: unless-stopped
+
+  fail2ban:
+    container_name: fail2ban
+    image: lscr.io/linuxserver/fail2ban:latest
+
+    network_mode: host
+
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+
+    volumes:
+      - ${CONFIGDIR}/fail2ban:/config
+      - /var/log:/var/log:ro
+      #- /path/to/homeassistant/log:/remotelogs/homeassistant:ro #optional
+
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
     restart: unless-stopped
 
 ####################
