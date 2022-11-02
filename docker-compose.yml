@@ -51,10 +51,6 @@ services:
     container_name: wireguard-remote
     image: lscr.io/linuxserver/wireguard:latest
 
-    networks:
-      dns-net:
-        ipv4_address: 172.20.0.4
-
     ports:
       - ${PORT_VPN:-51820}:51820/udp
 
@@ -67,7 +63,7 @@ services:
 
       SERVERURL: ${WG_SERVERURL:-auto} #optional
       SERVERPORT: ${PORT_VPN:-51820} #optional
-      PEERDNS: 172.20.0.2 # passing the pihole container is ideal, but apparently not possible
+      PEERDNS: 8.8.8.8
       ALLOWEDIPS: ${WG_ALLOWED_IPS:-0.0.0.0/0} #optional
       LOG_CONFS: true #optional
 
