@@ -66,7 +66,7 @@ services:
 
       SERVERURL: ${WG_SERVERURL:-auto} #optional
       SERVERPORT: ${PORT_VPN:-51820} #optional
-      PEERDNS: 8.8.8.8
+      PEERDNS: ${WG_STATICDNS:-8.8.8.8}
       ALLOWEDIPS: ${WG_ALLOWED_IPS:-0.0.0.0/0} #optional
       LOG_CONFS: true #optional
 
