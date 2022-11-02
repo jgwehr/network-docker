@@ -44,6 +44,9 @@ services:
 
     cap_add:
       - NET_ADMIN # Recommended but not required (DHCP needs NET_ADMIN)
+
+    healthcheck:
+      test: ["CMD", "dig", "+norecurse", "+retry=0", "@127.0.0.1", "pi.hole"]
     restart: unless-stopped
 
   wireguard-remote:
@@ -74,6 +77,10 @@ services:
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
+
+    healthcheck:
+      test: ["CMD", "wg", "show"]
+
     deploy:
       resources:
         limits:
@@ -141,6 +148,9 @@ services:
     cap_add:
       - NET_ADMIN
       - NET_RAW
+
+    healthcheck:
+      test: ["CMD", "fail2ban-client", "status"]
     restart: unless-stopped
 
 ####################
