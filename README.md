@@ -35,10 +35,11 @@ This project aims to provide a basic set of networking tools. Docker is used as 
 
 ## Build directories
 
-1. `mkdir -p /srv/config/{unbound,pihole/{dnsmasq.d,pihole}}`
+1. `mkdir -p /srv/config/{unbound,fail2ban,pihole/{dnsmasq.d,pihole}}`
 1. `sudo chown -R $USER:$USER /srv`
 1. Copy Unbound Files: `cp staticconfig/unbound/a-records.conf /srv/config/unbound/`
 1. Copy Unbound Files: `cp staticconfig/unbound/unbound.conf /srv/config/unbound/`
+1. Copy Fail2Ban Files: `cp staticconfig/fail2ban/jail.local /srv/config/fail2ban/fail2ban/`
 
 
 ## Starting Services
@@ -58,6 +59,7 @@ This project aims to provide a basic set of networking tools. Docker is used as 
 ## Getting Remote Management
 *Done through Wireguard*
 
+### Configure Wireguard
 1. Wireguard will automatically create configurations when the container starts.
 1. You can get the QR codes using `docker logs --follow wireguard`. Alternatively, these files are located at `/srv/config/wireguard/<peer>` when using the default .env
 1. Get the necessary Wireguard client https://www.wireguard.com/install/
