@@ -73,6 +73,8 @@ This project aims to provide a basic set of networking tools. Docker is used as 
 1.  Open SSHD Config: `sudo nano /etc/ssh/sshd_config`
     1.  Disable empty passwords: `PermitEmptyPasswords no`
     2.  Change default SSH ports: `Port 2345`
+    3.  Prevent root login: `PermitRootLogin no`
+    3.  Limit active sessions: `MaxSessions 4`
     5.  Configure idle timeout interval: `ClientAliveInterval 300`
     5.  Configure idle timeout interval: `ClientAliveCountMax 2`
     6.  Configure Allowed  Groups: `AllowGroups ssh_allowed`
