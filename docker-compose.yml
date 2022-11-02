@@ -51,6 +51,10 @@ services:
     container_name: wireguard-remote
     image: lscr.io/linuxserver/wireguard:latest
 
+    networks:
+      dns-net:
+        ipv4_address: 172.20.0.4
+
     ports:
       - ${PORT_VPN:-51820}:51820/udp
 
