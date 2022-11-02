@@ -68,11 +68,16 @@ This project aims to provide a basic set of networking tools. Docker is used as 
 ### Harden SSH
 *via https://linuxhandbook.com/ssh-hardening-tips/*
 
+1.  Create a new SSH Group for approved users: `sudo groupadd -g 1022 ssh_allowed`
+1.  Add your primary SSH User to this group: `sudo usermod -a -G ssh_allowed pi`
 1.  Open SSHD Config: `sudo nano /etc/ssh/sshd_config`
-1.  Disable empty passwords: `PermitEmptyPasswords no`
-2.  Change default SSH ports: `Port 2345`
-5.  Configure idle timeout interval: `ClientAliveInterval 300`
-5.  Configure idle timeout interval: `ClientAliveCountMax 2`
+    1.  Disable empty passwords: `PermitEmptyPasswords no`
+    2.  Change default SSH ports: `Port 2345`
+    5.  Configure idle timeout interval: `ClientAliveInterval 300`
+    5.  Configure idle timeout interval: `ClientAliveCountMax 2`
+    6.  Configure Allowed  Groups: `AllowGroups ssh_allowed`
+1. After the change, you will need to restart the sshd service using `sudo systemctl restart ssh` or rebooting.
+
 
 
 
@@ -89,8 +94,3 @@ Run the command `/usr/bin/tvservice -o` to disable HDMI. Also run `sudo nano /et
 ## Updating and upgrading rasp pi OS
 
 Run `sudo apt update`, then `sudo apt full-upgrade -y`, and finally `sudo apt clean` to clean up the downloaded package files.
-
-## Restrict ssh accounts
-1. Run `sudoedit /etc/ssh/sshd_config`
-1. Under the line “# Authentication”, add `AllowUsers <account_name1> <account_name2>`
-1. After the change, you will need to restart the sshd service using `sudo systemctl restart ssh` or rebooting.
