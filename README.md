@@ -65,6 +65,17 @@ This project aims to provide a basic set of networking tools. Docker is used as 
 1. Get the necessary Wireguard client https://www.wireguard.com/install/
 1. Follow Wireguard's instructions. Generally speaking, you'll need a peer/client configuration from this server. Easily done on your phone via QR  code. Or, on a computer, by copying a `*.conf` file from the server to the client.
 
+### Harden SSH
+*via https://linuxhandbook.com/ssh-hardening-tips/*
+
+1.  Open SSHD Config: `sudo nano /etc/ssh/sshd_config`
+1.  Disable empty passwords: `PermitEmptyPasswords no`
+2.  Change default SSH ports: `Port 2345`
+5.  Configure idle timeout interval: `ClientAliveInterval 300`
+5.  Configure idle timeout interval: `ClientAliveCountMax 2`
+
+
+
 # General
 _credit to https://github.com/willy-wagtail/raspberrypi_
 ## SD Card Health
