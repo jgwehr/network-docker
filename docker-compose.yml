@@ -143,7 +143,7 @@ services:
       MSDELAY: ${ESSH_MSDELAY:-10000} #optional
       MAXLINES: ${ESSH_MAXLINES:-32} #optional
       MAXCLIENTS: ${ESSH_MAXCLIENTS:-4096} #optional
-      LOGFILE: ${ESSH_LOGFILE:-false} #optional
+      LOGFILE: ${DEBUG_LOG:-false} #optional. By default, the app logs to container log. If this is set to true, the log will be output to file under /config/logs/endlessh (/config needs to be mapped).
       BINDFAMILY: ${ESSH_BINDFAMILY} #optional
 
     #volumes:
