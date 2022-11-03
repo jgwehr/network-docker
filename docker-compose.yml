@@ -129,6 +129,34 @@ services:
           memory: 32M  
     restart: unless-stopped
 
+  endlessh:
+    image: lscr.io/linuxserver/endlessh:latest
+    container_name: endlessh
+
+    ports:
+      - ${PORT_SSHPROTECT:-22}:2222
+    
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
+      MSDELAY: ${ESSH_MSDELAY:-10000} #optional
+      MAXLINES: ${ESSH_MAXLINES:-32} #optional
+      MAXCLIENTS: ${ESSH_MAXCLIENTS:-4096} #optional
+      LOGFILE: ${ESSH_LOGFILE:-false} #optional
+      BINDFAMILY: ${ESSH_BINDFAMILY} #optional
+
+    #volumes:
+    #  - ${CONFIGDIR}/endlessh:/config #Required if LOGFILE is set to true.
+
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 32M  
+    restart: unless-stopped
+
+
   fail2ban:
     container_name: fail2ban
     image: lscr.io/linuxserver/fail2ban:latest
